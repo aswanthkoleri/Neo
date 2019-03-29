@@ -5,6 +5,7 @@ import re
 import json
 import httplib2
 import os
+from topnews import News
 
 BOT_MAIL = "neo-bot@bint.zulipchat.com"
 
@@ -16,6 +17,8 @@ class Neo(object):
     def __init__(self):
         self.client = zulip.Client(site="https://bint.zulipchat.com/api/")
         self.subscribe_all()
+        self.trans = Translate()
+        self.news = News()
         self.subKeys=["hello","sample"]
     
     #  This will subscribe and listen to messages on all streams.
@@ -43,6 +46,22 @@ class Neo(object):
                     "to": msg["display_recipient"],
                     "content": message
                     })
+            if content[1].lower() == "news":
+                news = self.news.getTopNews()
+                message = ""
+                for item in news:
+                    message += "**"+item.title+"**"
+                    message += '\n'
+                    message += item.des
+                    message += '\n\n'
+                self.client.send_message({
+					"type": "stream",
+					"subject": msg["subject"],
+					"to": msg["display_recipient"],
+					"content": message
+					})
+            
+
 def main():
     neo= Neo()
     neo.client.call_on_each_message(neo.process)
@@ -53,5 +72,3 @@ if __name__ == "__main__":
 	except KeyboardInterrupt:
 		print("Thanks for using Neo Bot. Bye!")
 		sys.exit(0)
-        
-
