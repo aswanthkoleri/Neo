@@ -27,6 +27,7 @@ class Neo(object):
         self.location = Location()
         self.news = News()
         self.subKeys=["hello","sample"]
+        self.todoList=[]
     
     #  This will subscribe and listen to messages on all streams.
     def subscribe_all(self):
@@ -58,6 +59,7 @@ class Neo(object):
                         message += '\n\n'
                 except:
                     message = "Unable to get news"
+           
             elif content[1].lower() == "translate":
                 try:
                     message = content[2:]
@@ -66,6 +68,7 @@ class Neo(object):
                     message = self.translate.translateMsg(message)
                 except:
                     message = "Type in following format : neo translate **word**"
+            
             elif content[1].lower() == "weather":
                 api_key = fetch_api_key()
                 if len(content) > 2 and content[2].lower() != "":
@@ -82,6 +85,7 @@ class Neo(object):
                         message = "City not found!\nabc"
                 else:
                     message = "Please add a location name."
+            
             elif content[1].lower() == "geolocation":
                 try:
                     place = content[2]
@@ -90,6 +94,7 @@ class Neo(object):
                     message += "**Latitude** : "+str(result.lat)+"\n"+"**Longitude** : "+str(result.lng)
                 except:
                     message = "Type a correct place in following format : neo geolocation **place**"
+            
             elif content[1].lower() == "currency":
                 if len(content) == 3 and content[2].lower() != "":
                     # Query format: Neo currency USD
@@ -105,6 +110,7 @@ class Neo(object):
                     message += "Last Updated: *{}*".format(currency['date'])
                 else:
                     message = "Please ask the query in correct format."
+            
             elif content[1].lower() == "todo":
                 # Has to do some more modifications 
                 if content[2].lower() == "add":
@@ -112,21 +118,31 @@ class Neo(object):
                     Todo("add",self.todoList,todoItem)
                     message="** The todo is added **\n The current Todo List is :\n\n"
                     message=displayTodo(message,self.todoList)
-                if content[2].lower() =="done":
-                    itemNo=int(content[3].lower())
-                    print(itemNo)
-                    message+="** The item is marked as done **\n"
-                    Todo("done",self.todoList,"",itemNo)
-                    message=displayTodo(message,self.todoList)
-                if content[2].lower() == "remove":
-                    if content[3].lower()!="all":
+                elif content[2].lower() =="done":
+                    if content[3].lower().isdigit(): 
                         itemNo=int(content[3].lower())
-                        Todo("remove",self.todoList,"",itemNo)
-                        message="** The todo item is removed **\nThe current Todo List is :\n\n"
+                        # print(itemNo)
+                        message+="** The item is marked as done **\n"
+                        Todo("done",self.todoList,"",itemNo)
                         message=displayTodo(message,self.todoList)
+                    else:
+                        message="Enter the Todo item number"
+                elif content[2].lower() == "remove":
+                    if content[3].lower()!="all":
+                        if content[3].lower().isdigit():
+                            itemNo=int(content[3].lower())
+                            Todo("remove",self.todoList,"",itemNo)
+                            message="** The todo item is removed **\nThe current Todo List is :\n\n"
+                            message=displayTodo(message,self.todoList)
+                        else:
+                            message="Enter the Todo item number"
                     elif content[3].lower() == "all":
                         Todo("remove_all",self.todoList,"",itemNo)
                         message="The Todo list is cleared"
+                    else:
+                        message="Invalid todo command"
+                else:
+                    message="Invalid todo command."
             else:
                 message="HELP option"
             
