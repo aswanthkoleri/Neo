@@ -28,6 +28,7 @@ Neo-Bot can:
 - Meeting Scheduling
 - Check Spam
 - Smart Messages Summarization
+- Smart Text Summarization
 - To-Do
 - Currency Exchange
 - Geolocation
@@ -43,6 +44,10 @@ Schedule meeting with all the team member easily using the bot. The organizer ju
 Bot will detect all the spam users in any stream.<br>
 `neo checkspam`<br>
 ### Smart Messages Summarization
+Read all the unseen messages from stream and create a summary of messages.<br>
+
+### Smart Text Summarization
+Convert long paragraph to summarized short message using NLP.<br>
 
 ### To-Do
 Add, remove, check current status for to-do's<br>
