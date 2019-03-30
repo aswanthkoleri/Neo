@@ -5,7 +5,10 @@ import re
 import json
 import httplib2
 import os
-from todo import Todo
+from topnews import News
+from todo import Todo,displayTodo
+from weather import fetch_api_key, get_weather
+
 BOT_MAIL = "neo-bot@bint.zulipchat.com"
 
 class Neo(object):
@@ -16,7 +19,9 @@ class Neo(object):
     def __init__(self):
         self.client = zulip.Client(site="https://bint.zulipchat.com/api/")
         self.subscribe_all()
-        self.todolist=[]
+        self.todoList=[]
+        # self.trans = Translate()
+        self.news = News()
         self.subKeys=["hello","sample"]
     
     #  This will subscribe and listen to messages on all streams.
@@ -36,27 +41,61 @@ class Neo(object):
             return 
 
         if content[0].lower() == "neo" or content[0] == "@**neo**":
+            message = ""
             if content[1].lower() == "hello":
                 message="Hi"
-                self.client.send_message({
-                    "type": "stream",
-                    "subject": msg["subject"],
-                    "to": msg["display_recipient"],
-                    "content": message
-                    })
+            elif content[1].lower() == "news":
+                news = self.news.getTopNews()
+                for item in news:
+                    message += "**"+item.title+"**"
+                    message += '\n'
+                    message += item.des
+                    message += '\n\n'
+            elif content[1].lower() == "weather":
+                api_key = fetch_api_key()
+                if len(content) > 2 and content[2].lower() != "":
+                    weather = get_weather(api_key, content[2].lower())
+                    if str(weather['cod']) != "404":
+                        message += "[](http://openweathermap.org/img/w/{}.png)".format(weather['weather'][0]['icon'])
+                        message += "**Weather report for {}**\n".format(content[2].lower())
+                        message += "Temperature: **{}**\n".format(str(weather['main']['temp']) + "° C")
+                        message += "Pressure: **{}**\n".format(str(weather['main']['pressure']) + " hPa")
+                        message += "Humidity: **{}**\n".format(str(weather['main']['humidity']) + "%")
+                        message += "Wind Speed: **{}**".format(str(weather['wind']['speed']) + " $$m/s^2$$")
+                    else:
+                        message = "City not found!\nabc"
+                else:
+                    message = "Please add a location name"
             elif content[1].lower() == "todo":
                 if content[2].lower() == "add":
-                    Todo("add",self.todolist,content[3].lower())
-                    message="Todo Added\nThe Current to-do list is :\n"
-                    no=0
-                    for i in self.todolist:
-                        message+=no+". "+i+"\n"
-                    self.client.send_message({
-                        "type": "stream",
-                        "subject": msg["subject"],
-                        "to": msg["display_recipient"],
-                        "content": message
-                    })
+                    todoItem=" ".join(content[3:]).lower()
+                    Todo("add",self.todoList,todoItem)
+                    message="** The todo is added **\n The current Todo List is :\n\n"
+                    message=displayTodo(message,self.todoList)
+                if content[2].lower() =="done":
+                    itemNo=int(content[3].lower())
+                    print(itemNo)
+                    message+="** The item is marked as done **\n"
+                    Todo("done",self.todoList,"",itemNo)
+                    message=displayTodo(message,self.todoList)
+                if content[2].lower() == "remove":
+                    if content[3].lower()!="all":
+                        itemNo=int(content[3].lower())
+                        Todo("remove",self.todoList,"",itemNo)
+                        message="** The todo item is removed **\nThe current Todo List is :\n\n"
+                        message=displayTodo(message,self.todoList)
+                    elif content[3].lower() == "all":
+                        Todo("remove_all",self.todoList,"",itemNo)
+                        message="The Todo list is cleared"
+            else:
+                message="HELP option"
+            self.client.send_message({
+                "type": "stream",
+                "subject": msg["subject"],
+                "to": msg["display_recipient"],
+                "content": message
+            })
+
 def main():
     neo= Neo()
     neo.client.call_on_each_message(neo.process)
@@ -67,5 +106,3 @@ if __name__ == "__main__":
 	except KeyboardInterrupt:
 		print("Thanks for using Neo Bot. Bye!")
 		sys.exit(0)
-        
-
