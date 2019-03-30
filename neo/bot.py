@@ -7,6 +7,7 @@ import httplib2
 import os
 from topnews import News
 from translate import Translate
+from location import Location
 
 from weather import fetch_api_key, get_weather
 
@@ -21,6 +22,7 @@ class Neo(object):
         self.client = zulip.Client(site="https://bint.zulipchat.com/api/")
         self.subscribe_all()
         self.translate = Translate()
+        self.location = Location()
         self.news = News()
         self.subKeys=["hello","sample"]
     
@@ -71,6 +73,14 @@ class Neo(object):
                         message = "City not found!\nabc"
                 else:
                     message = "Please add a location name"
+            elif content[1].lower() == "geolocation":
+                try:
+                    place = content[2]
+                    result = self.location.getLocation(place)
+                    message = ""
+                    message += "**Latitude** : "+str(result.lat)+"\n"+"**Longitude** : "+str(result.lng)
+                except:
+                    message = "Type a correct place in following format : neo geolocation **place**"
             self.client.send_message({
                 "type": "stream",
                 "subject": msg["subject"],
