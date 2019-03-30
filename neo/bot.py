@@ -12,6 +12,8 @@ from location import Location
 from weather import fetch_api_key, get_weather
 from currencyExchange import fetch_currency_exchange_rate
 from summarizer import summarizeDoc
+from digest import digest
+client = zulip.Client(config_file="~/.zuliprc")
 
 BOT_MAIL = "neo-bot@bint.zulipchat.com"
 
@@ -37,6 +39,7 @@ class Neo(object):
 
     def process(self, msg):
 		# array  consisting of all the words
+        message_id=msg["id"]
         content = msg["content"].split()
         sender_email = msg["sender_email"]
         ttype = msg["type"]
@@ -161,9 +164,12 @@ class Neo(object):
                     message="The summary is:\n"+summary
                 except:
                     message="Something went wrong with the command you typed. Please check"
+            elif content[1].lower()=="digest":
+                # Get all users
+                (message,summary)=digest(stream_name,message_id,sender_email)
+                message+="\n** The summary of the messages is : **\n"+summary
             else:
                 message="HELP option"
-        
             self.client.send_message({
                 "type": "stream",
                 "subject": msg["subject"],
