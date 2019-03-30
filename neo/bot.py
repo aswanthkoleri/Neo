@@ -13,6 +13,7 @@ from weather import fetch_api_key, get_weather
 from currencyExchange import fetch_currency_exchange_rate
 from summarizer import summarizeDoc
 from digest import digest
+import schedule
 client = zulip.Client(config_file="~/.zuliprc")
 
 BOT_MAIL = "neo-bot@bint.zulipchat.com"
