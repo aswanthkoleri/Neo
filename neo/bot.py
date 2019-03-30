@@ -11,10 +11,7 @@ from translate import Translate
 from location import Location
 from weather import fetch_api_key, get_weather
 from currencyExchange import fetch_currency_exchange_rate
-from sumy.parsers.plaintext import PlaintextParser
-from sumy.nlp.tokenizers import Tokenizer
-from sumy.nlp.stemmers import Stemmer
-from sumy.utils import get_stop_words
+from summarizer import summarizeDoc
 
 BOT_MAIL = "neo-bot@bint.zulipchat.com"
 
@@ -156,8 +153,14 @@ class Neo(object):
                 else:
                     message="Invalid todo command."
             elif content[1].lower()=="summarize":
-                document=" ".join(content[3:]).lower()
-                
+                try:
+                    sentenceCount=int(content[2].lower())
+                    summarizerType=content[3].upper()
+                    document=" ".join(content[4:]).lower()
+                    summary=summarizeDoc(summarizerType,document,sentenceCount)
+                    message="The summary is:\n"+summary
+                except:
+                    message="Something went wrong with the command you typed. Please check"
             else:
                 message="HELP option"
         
