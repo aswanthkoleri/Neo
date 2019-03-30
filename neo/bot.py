@@ -49,17 +49,23 @@ class Neo(object):
             if content[1].lower() == "hello":
                 message="Hi"
             elif content[1].lower() == "news":
-                news = self.news.getTopNews()
-                for item in news:
-                    message += "**"+item.title+"**"
-                    message += '\n'
-                    message += item.des
-                    message += '\n\n'
+                try:
+                    news = self.news.getTopNews()
+                    for item in news:
+                        message += "**"+item.title+"**"
+                        message += '\n'
+                        message += item.des
+                        message += '\n\n'
+                except:
+                    message = "Unable to get news"
             elif content[1].lower() == "translate":
-                message = content[2:]
-                message = " ".join(message)
-                print(message)
-                message = self.translate.translateMsg(message)
+                try:
+                    message = content[2:]
+                    message = " ".join(message)
+                    print(message)
+                    message = self.translate.translateMsg(message)
+                except:
+                    message = "Type in following format : neo translate **word**"
             elif content[1].lower() == "weather":
                 api_key = fetch_api_key()
                 if len(content) > 2 and content[2].lower() != "":
@@ -76,7 +82,6 @@ class Neo(object):
                         message = "City not found!\nabc"
                 else:
                     message = "Please add a location name."
-                                message = "Please add a location name"
             elif content[1].lower() == "geolocation":
                 try:
                     place = content[2]
