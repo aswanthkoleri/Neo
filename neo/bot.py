@@ -181,22 +181,28 @@ class Neo(object):
                         print(message)
             elif content[1].lower() == "discussion":
                 # Reminder bot format : neo discussion on <subject> at <time> <Date>
-                # Get subject
-                i=3
-                subject=""
                 print(content)
-                while content[i].lower()!="at":
-                    subject+=content[i]+" "
-                    i+=1
-                print(i)
+                # Get subject
+                subject = ""
+                i = 0
+                while content[i].lower() != "on":
+                    i += 1
+                i += 1
+                while content[i].lower() != "at":
+                    subject += content[i] + " "
+                    i += 1
+                print("Subject: {}".format(subject))
                 # time (Assumed to be UTC)
-                i=+1
-                print(content[i].lower())
-                time=content[i]
-                print("time",time )
-                i+=1
-                date=content[i]
-                print(subject,time,date)
+                time = ""
+                i = 0
+                while content[i].lower() != "at":
+                    i += 1
+                i += 1
+                time += content[i] + " " + content[i+1]
+                i += 2
+                date = content[i] + " " + content[i+1] + " " + content[i+2]
+                print("Time: {}".format(time))
+                print("Date: {}".format(date))
             else:
                 message="HELP option"
             self.client.send_message({
