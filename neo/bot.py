@@ -5,7 +5,7 @@ import re
 import json
 import httplib2
 import os
-
+from todo import Todo
 BOT_MAIL = "neo-bot@bint.zulipchat.com"
 
 class Neo(object):
@@ -16,6 +16,7 @@ class Neo(object):
     def __init__(self):
         self.client = zulip.Client(site="https://bint.zulipchat.com/api/")
         self.subscribe_all()
+        self.todolist=[]
         self.subKeys=["hello","sample"]
     
     #  This will subscribe and listen to messages on all streams.
@@ -42,6 +43,19 @@ class Neo(object):
                     "subject": msg["subject"],
                     "to": msg["display_recipient"],
                     "content": message
+                    })
+            elif content[1].lower() == "todo":
+                if content[2].lower() == "add":
+                    Todo("add",self.todolist,content[3].lower())
+                    message="Todo Added\nThe Current to-do list is :\n"
+                    no=0
+                    for i in self.todolist:
+                        message+=no+". "+i+"\n"
+                    self.client.send_message({
+                        "type": "stream",
+                        "subject": msg["subject"],
+                        "to": msg["display_recipient"],
+                        "content": message
                     })
 def main():
     neo= Neo()
