@@ -9,3 +9,16 @@ A Zulip bot created in HackInTheNorth
 5. In ``` bot.py ``` , change site in ``` self.client = zulip.Client(site="https://bint.zulipchat.com/api/") ``` to url of your created zulip realm.Do the same for ``` BOT_MAIL ``` variable.  
 6. Run ``` bot.py ``` using python 3. ``` python3 bot.py ```
 7. Head over to your created zulip realm and start using the bot.
+
+# Features
+
+Neo-Bot can:
+- Check Spam
+- Currency Exchange
+- Text Summarization
+- Geolocation
+- Meeting Schedualing
+- To-Do
+- Top News
+- Translate Languages
+- Weather Queries
