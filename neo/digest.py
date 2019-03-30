@@ -3,7 +3,7 @@ import zulip
 from summarizer import summarizeDoc
 client = zulip.Client(config_file="~/.zuliprc")
 
-def digest(stream_name,message_id,sender_email):
+def digest(stream_name,message_id,sender_email,bot_email):
     # Get all users
     # all_users=client.get_members()
     # print(all_users)
@@ -22,6 +22,7 @@ def digest(stream_name,message_id,sender_email):
         'num_before': 100,
         'num_after': 0,
         'narrow': [{'operator': 'sender', 'operand': sender_email, 'negated' : True },
+                   {'operator': 'sender', 'operand': bot_email, 'negated' : True },
                    {'operator': 'stream', 'operand': stream_name}],
         'client_gravatar': True,
         'apply_markdown': False
@@ -42,20 +43,17 @@ def digest(stream_name,message_id,sender_email):
     #     print(i)
     # first I have to take all top 10 messages
     messagesListWithReactions.sort(key=lambda x: x[0],reverse=True)
-    sample=[(1,2),(2,3),(3,4)]
-    sample.sort(key=lambda x: x[1],reverse=True)
-    print(sample)
-    message="**The top 10 messages are :**\n"
+    message="**The top 10 messages are : **\n"
     document=""
     for i,item in enumerate(messagesListWithReactions):
         message+="\n"+str(i+1)+". "+item[1]+"["+str(item[0]) + " reacts]\n\n\n"
-        
         if (i+1)==10:
             break
     for item in messagesListWithReactions:
         document+=item[1]+"."
     print(message)
     summary=summarizeDoc("LR",document,20)
+    print(summary)
     return (message,summary)
     
 

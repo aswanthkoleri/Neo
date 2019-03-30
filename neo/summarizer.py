@@ -21,6 +21,7 @@ def summarizeDoc(summarizerType,content,sentenceCount):
     f = open("doc.txt","a")
     f.write(content)
     f.close()
+   
     parser = PlaintextParser.from_file("doc.txt", Tokenizer(language))
     stemmer = Stemmer(language)
     summarizer=SUMMARIZERS[summarizerType](stemmer)
@@ -28,4 +29,5 @@ def summarizeDoc(summarizerType,content,sentenceCount):
     summarizedContent=""
     for sentence in summarizer(parser.document,sentenceCount):
         summarizedContent+=str(sentence)
+    open('doc.txt', 'w').close()
     return summarizedContent

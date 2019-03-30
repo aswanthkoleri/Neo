@@ -166,7 +166,7 @@ class Neo(object):
                     message="Something went wrong with the command you typed. Please check"
             elif content[1].lower()=="digest":
                 # Get all users
-                (message,summary)=digest(stream_name,message_id,sender_email)
+                (message,summary)=digest(stream_name,message_id,sender_email,BOT_MAIL)
                 message+="\n** The summary of the messages is : **\n"+summary
             else:
                 message="HELP option"
