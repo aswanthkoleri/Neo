@@ -17,6 +17,11 @@ def Todo(action,todolist,message="",removeItemNo=-1):
         todolist.pop(itemNo)
     if action=="remove_all":
         todolist=[]
+    if action=="undone":
+        itemNo=removeItemNo-1
+        item=todolist[itemNo]
+        todolist.pop(itemNo)
+        todolist.insert(0,(item[0],0))
     return
     
 def displayTodo(message,todolist):

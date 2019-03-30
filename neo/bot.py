@@ -9,9 +9,12 @@ from topnews import News
 from todo import Todo,displayTodo
 from translate import Translate
 from location import Location
-
 from weather import fetch_api_key, get_weather
 from currencyExchange import fetch_currency_exchange_rate
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.nlp.stemmers import Stemmer
+from sumy.utils import get_stop_words
 
 BOT_MAIL = "neo-bot@bint.zulipchat.com"
 
@@ -127,6 +130,15 @@ class Neo(object):
                         message=displayTodo(message,self.todoList)
                     else:
                         message="Enter the Todo item number"
+                elif content[2].lower() =="undone":
+                    if content[3].lower().isdigit(): 
+                        itemNo=int(content[3].lower())
+                        # print(itemNo)
+                        message+="** The item is marked as undone **\n"
+                        Todo("undone",self.todoList,"",itemNo)
+                        message=displayTodo(message,self.todoList)
+                    else:
+                        message="Enter the Todo item number"
                 elif content[2].lower() == "remove":
                     if content[3].lower()!="all":
                         if content[3].lower().isdigit():
@@ -143,9 +155,12 @@ class Neo(object):
                         message="Invalid todo command"
                 else:
                     message="Invalid todo command."
+            elif content[1].lower()=="summarize":
+                document=" ".join(content[3:]).lower()
+                
             else:
                 message="HELP option"
-            
+        
             self.client.send_message({
                 "type": "stream",
                 "subject": msg["subject"],
