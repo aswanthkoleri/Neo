@@ -7,7 +7,9 @@ import httplib2
 import os
 from topnews import News
 from todo import Todo,displayTodo
+from translate import Translate
 from weather import fetch_api_key, get_weather
+from currencyExchange import fetch_currency_exchange_rate
 
 BOT_MAIL = "neo-bot@bint.zulipchat.com"
 
@@ -19,8 +21,7 @@ class Neo(object):
     def __init__(self):
         self.client = zulip.Client(site="https://bint.zulipchat.com/api/")
         self.subscribe_all()
-        self.todoList=[]
-        # self.trans = Translate()
+        self.translate = Translate()
         self.news = News()
         self.subKeys=["hello","sample"]
     
@@ -51,9 +52,15 @@ class Neo(object):
                     message += '\n'
                     message += item.des
                     message += '\n\n'
+            elif content[1].lower() == "translate":
+                message = content[2:]
+                message = " ".join(message)
+                print(message)
+                message = self.translate.translateMsg(message)
             elif content[1].lower() == "weather":
                 api_key = fetch_api_key()
                 if len(content) > 2 and content[2].lower() != "":
+                    # Query format: Neo weather London
                     weather = get_weather(api_key, content[2].lower())
                     if str(weather['cod']) != "404":
                         message += "[](http://openweathermap.org/img/w/{}.png)".format(weather['weather'][0]['icon'])
@@ -65,7 +72,22 @@ class Neo(object):
                     else:
                         message = "City not found!\nabc"
                 else:
-                    message = "Please add a location name"
+                    message = "Please add a location name."
+            elif content[1].lower() == "currency":
+                if len(content) == 3 and content[2].lower() != "":
+                    # Query format: Neo currency USD
+                    currency = fetch_currency_exchange_rate("", content[2].upper())
+                    message += "**Showing all currency conversions for 1 {}:**\n".format(content[2].upper())
+                    for curr in currency['rates']:
+                        message += "1 {} = ".format(content[2].upper()) + "{}".format(format(currency['rates'][curr], '.2f')) + " {}\n".format(curr)
+                    message += "Last Updated: *{}*".format(currency['date'])
+                elif len(content) == 5 and content[2].lower() != "" and content[4].lower() != "":
+                    # Query format: Neo currency INR to USD
+                    currency = fetch_currency_exchange_rate(content[2].upper(), content[4].upper())
+                    message += "1 {} = ".format(content[4].upper()) + "{}".format(format(currency['rates'][content[2].upper()], '.2f')) + " {}\n".format(content[4].upper())
+                    message += "Last Updated: *{}*".format(currency['date'])
+                else:
+                    message = "Please ask the query in correct format."
             elif content[1].lower() == "todo":
                 if content[2].lower() == "add":
                     todoItem=" ".join(content[3:]).lower()
@@ -89,6 +111,7 @@ class Neo(object):
                         message="The Todo list is cleared"
             else:
                 message="HELP option"
+            
             self.client.send_message({
                 "type": "stream",
                 "subject": msg["subject"],
