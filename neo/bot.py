@@ -8,6 +8,8 @@ import os
 from topnews import News
 from translate import Translate
 
+from weather import fetch_api_key, get_weather
+
 BOT_MAIL = "neo-bot@bint.zulipchat.com"
 
 class Neo(object):
@@ -39,41 +41,42 @@ class Neo(object):
             return 
 
         if content[0].lower() == "neo" or content[0] == "@**neo**":
+            message = ""
             if content[1].lower() == "hello":
                 message="Hi"
-                self.client.send_message({
-                    "type": "stream",
-                    "subject": msg["subject"],
-                    "to": msg["display_recipient"],
-                    "content": message
-                    })
-            if content[1].lower() == "news":
+            elif content[1].lower() == "news":
                 news = self.news.getTopNews()
-                message = ""
                 for item in news:
                     message += "**"+item.title+"**"
                     message += '\n'
                     message += item.des
                     message += '\n\n'
-                self.client.send_message({
-					"type": "stream",
-					"subject": msg["subject"],
-					"to": msg["display_recipient"],
-					"content": message
-					})
-            if content[1].lower() == "translate":
+            elif content[1].lower() == "translate":
                 message = content[2:]
                 message = " ".join(message)
                 print(message)
-                transMsg = self.translate.translateMsg(message)
-                self.client.send_message({
-					"type": "stream",
-					"subject": msg["subject"],
-					"to": msg["display_recipient"],
-					"content": transMsg
-					})
-
-            
+                message = self.translate.translateMsg(message)
+            elif content[1].lower() == "weather":
+                api_key = fetch_api_key()
+                if len(content) > 2 and content[2].lower() != "":
+                    weather = get_weather(api_key, content[2].lower())
+                    if str(weather['cod']) != "404":
+                        message += "[](http://openweathermap.org/img/w/{}.png)".format(weather['weather'][0]['icon'])
+                        message += "**Weather report for {}**\n".format(content[2].lower())
+                        message += "Temperature: **{}**\n".format(str(weather['main']['temp']) + "° C")
+                        message += "Pressure: **{}**\n".format(str(weather['main']['pressure']) + " hPa")
+                        message += "Humidity: **{}**\n".format(str(weather['main']['humidity']) + "%")
+                        message += "Wind Speed: **{}**".format(str(weather['wind']['speed']) + " $$m/s^2$$")
+                    else:
+                        message = "City not found!\nabc"
+                else:
+                    message = "Please add a location name"
+            self.client.send_message({
+                "type": "stream",
+                "subject": msg["subject"],
+                "to": msg["display_recipient"],
+                "content": message
+            })
 
 def main():
     neo= Neo()
