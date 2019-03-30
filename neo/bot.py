@@ -8,6 +8,8 @@ import os
 from topnews import News
 from todo import Todo,displayTodo
 from translate import Translate
+from location import Location
+
 from weather import fetch_api_key, get_weather
 from currencyExchange import fetch_currency_exchange_rate
 
@@ -22,6 +24,7 @@ class Neo(object):
         self.client = zulip.Client(site="https://bint.zulipchat.com/api/")
         self.subscribe_all()
         self.translate = Translate()
+        self.location = Location()
         self.news = News()
         self.subKeys=["hello","sample"]
     
@@ -46,17 +49,23 @@ class Neo(object):
             if content[1].lower() == "hello":
                 message="Hi"
             elif content[1].lower() == "news":
-                news = self.news.getTopNews()
-                for item in news:
-                    message += "**"+item.title+"**"
-                    message += '\n'
-                    message += item.des
-                    message += '\n\n'
+                try:
+                    news = self.news.getTopNews()
+                    for item in news:
+                        message += "**"+item.title+"**"
+                        message += '\n'
+                        message += item.des
+                        message += '\n\n'
+                except:
+                    message = "Unable to get news"
             elif content[1].lower() == "translate":
-                message = content[2:]
-                message = " ".join(message)
-                print(message)
-                message = self.translate.translateMsg(message)
+                try:
+                    message = content[2:]
+                    message = " ".join(message)
+                    print(message)
+                    message = self.translate.translateMsg(message)
+                except:
+                    message = "Type in following format : neo translate **word**"
             elif content[1].lower() == "weather":
                 api_key = fetch_api_key()
                 if len(content) > 2 and content[2].lower() != "":
@@ -73,6 +82,14 @@ class Neo(object):
                         message = "City not found!\nabc"
                 else:
                     message = "Please add a location name."
+            elif content[1].lower() == "geolocation":
+                try:
+                    place = content[2]
+                    result = self.location.getLocation(place)
+                    message = ""
+                    message += "**Latitude** : "+str(result.lat)+"\n"+"**Longitude** : "+str(result.lng)
+                except:
+                    message = "Type a correct place in following format : neo geolocation **place**"
             elif content[1].lower() == "currency":
                 if len(content) == 3 and content[2].lower() != "":
                     # Query format: Neo currency USD
