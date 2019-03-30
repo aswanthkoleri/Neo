@@ -47,7 +47,13 @@ Bot will detect all the spam users in any stream.<br>
 Read all the unseen messages from stream and create a summary of messages.<br>
 
 ### Smart Text Summarization
-Convert long paragraph to summarized short message using NLP.<br>
+Convert long paragraph to summarized short message of specified length using NLP.<br>
+It uses following summarizers:
+- LuhnSummarizer(LU)
+- LsaSummarizer(LS)
+- TextRankSummarizer(TR)
+- LexRankSummarizer(LR)<br>
+`neo summarize <sentence count> <summarization type> <sentences>`<br>
 
 ### To-Do
 Add, remove, check current status for to-do's<br>
