@@ -1,6 +1,13 @@
 # NEO BOT
 A Zulip bot created in HackInTheNorth
 
+## Developers and Maintainers
+The project is developed at **HackInTheNorth 4.0** hackathon and maintained by
+- Aswanth Koleri ([aswanthkoleri](https://github.com/aswanthkoleri))
+- Druvil CR ([druvilcr28](https://github.com/druvilcr28))
+- Divyanshu N Singh([DNS-404](https://github.com/DNS-404))
+- Jogendra Kumar ([jogendra](https://github.com/jogendra))
+
 # Instructions to run locally:
 1. [Create a Zulip Realm](https://zulip.com/create_realm/)
 2. Goto to settings and create a new generic bot named 'neo'. (Settings can be found in dropdown of gear icon present in top right corner of zulip realm)
@@ -22,3 +29,5 @@ Neo-Bot can:
 - Top News
 - Translate Languages
 - Weather Queries
+
+## How to use?
