@@ -5,6 +5,10 @@ import re
 import json
 import httplib2
 import os
+import math
+import threading
+import numpy as np
+from datetime import datetime
 from meeting import getAllUsers
 from topnews import News
 from todo import Todo,displayTodo
@@ -50,6 +54,8 @@ class Neo(object):
         ttype = msg["type"]
         stream_name = msg['display_recipient']
         stream_topic = msg['subject']
+        timestamp = msg['timestamp']
+
         if sender_email== BOT_MAIL:
             return 
 
@@ -183,6 +189,7 @@ class Neo(object):
             elif content[1].lower() == "discussion":
                 # Reminder bot format : neo discussion on <subject> at <time> <Date>
                 print(content)
+
                 # Get subject
                 subject = ""
                 i = 0
@@ -193,19 +200,20 @@ class Neo(object):
                     subject += content[i] + " "
                     i += 1
                 print("Subject: {}".format(subject))
+
+                
                 # time (Assumed to be UTC)
                 time = ""
                 i = 0
                 while content[i].lower() != "at":
                     i += 1
                 i += 1
-                time += content[i] + " " + content[i+1]
+                time += content[i]
                 i += 2
-                date = content[i] + " " + content[i+1] + " " + content[i+2]
+                date = content[i]
                 print("Time: {}".format(time))
                 print("Date: {}".format(date))
                 privateText = "{} arranged a meeting about {} at {} on {}.".format(sender_email, subject, time, date)
-                message = "Meeting arranged successfully."
                 emails = getAllUsers(sender_email, BOT_MAIL)
                 print(emails)
                 for email in emails:
@@ -215,7 +223,38 @@ class Neo(object):
                         "content": privateText
                     }
                     self.client.send_message(request)
+                message = "Meeting arranged successfully."
+                # print("abc {}".format(timestamp))
                 
+                # Reminder
+                dt = datetime.utcnow()
+                print(dt)
+                dt64 = np.datetime64(dt)
+                ts = (dt64 - np.datetime64('1970-01-01T00:00:00Z')) / np.timedelta64(1, 's')
+                currSec = int(ts)
+                print("Timestamp now: {}".format(currSec))
+                meetingTime = date + " " + time
+                dt64 = np.datetime64(meetingTime)
+                ts = (dt64 - np.datetime64('1970-01-01T00:00:00Z')) / np.timedelta64(1, 's')
+                meetingSec = int(ts)
+                print("Timestamp meeting: {}".format(currSec))
+                diff = meetingSec - currSec - 1800
+                if diff > 0:
+                    print("Reminder after {} seconds".format(diff))
+                    privateText = "REMINDER: {} arranged a meeting about {} at {} on {}.".format(sender_email, subject, time, date)
+                    def abc():
+                        print("REMINDER")
+                        for email in emails:
+                            request = {
+                                "type": "private",
+                                "to": email,
+                                "content": privateText
+                            }
+                            result = self.client.send_message(request)
+                            print("Email:{}, Status:{}".format(email, result['result']))
+                        timer.cancel()
+                    timer = threading.Timer(diff, abc)
+                    timer.start()
             else:
                 message="HELP option"
             self.client.send_message({
