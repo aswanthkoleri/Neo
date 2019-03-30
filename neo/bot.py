@@ -12,6 +12,7 @@ from location import Location
 from weather import fetch_api_key, get_weather
 from currencyExchange import fetch_currency_exchange_rate
 from summarizer import summarizeDoc
+from checkSpam import checkSpam
 
 BOT_MAIL = "neo-bot@bint.zulipchat.com"
 
@@ -37,6 +38,7 @@ class Neo(object):
 
     def process(self, msg):
 		# array  consisting of all the words
+        message_id = msg["id"]
         content = msg["content"].split()
         sender_email = msg["sender_email"]
         ttype = msg["type"]
@@ -161,6 +163,15 @@ class Neo(object):
                     message="The summary is:\n"+summary
                 except:
                     message="Something went wrong with the command you typed. Please check"
+            elif content[1].lower() == "checkspam":
+                print("eva")
+                message = ""
+                results = checkSpam("announce",message_id)
+                for item in results:
+                    print(item)
+                    if((item.similarityRank > 5) and (item.timeRank > 3)):
+                        message += "**"+item.email+"** : Suspected\n"
+                        print(message)
             else:
                 message="HELP option"
         
