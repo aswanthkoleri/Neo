@@ -18,6 +18,8 @@ client = zulip.Client(config_file="~/.zuliprc")
 
 BOT_MAIL = "neo-bot@bint.zulipchat.com"
 
+# Reminder bot format : neo discussion on <subject> at <time> <Date>
+
 class Neo(object):
     '''
     A docstring documenting this bot.
@@ -176,6 +178,24 @@ class Neo(object):
                     if((item.similarityRank > 5) and (item.timeRank > 3)):
                         message += "**"+item.email+"** : Suspected\n"
                         print(message)
+            elif content[1].lower() == "discussion":
+                # Reminder bot format : neo discussion on <subject> at <time> <Date>
+                # Get subject
+                i=3
+                subject=""
+                print(content)
+                while content[i].lower()!="at":
+                    subject+=content[i]+" "
+                    i+=1
+                print(i)
+                # time (Assumed to be UTC)
+                i=+1
+                print(content[i].lower())
+                time=content[i]
+                print("time",time )
+                i+=1
+                date=content[i]
+                print(subject,time,date)
             else:
                 message="HELP option"
             self.client.send_message({
