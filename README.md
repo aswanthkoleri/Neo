@@ -25,14 +25,47 @@ The project is developed at **HackInTheNorth 4.0** hackathon and maintained by
 # Features
 
 Neo-Bot can:
+- Meeting Scheduling
 - Check Spam
-- Currency Exchange
-- Text Summarization
-- Geolocation
-- Meeting Schedualing
+- Smart Messages Summarization
 - To-Do
+- Currency Exchange
+- Geolocation
 - Top News
 - Translate Languages
 - Weather Queries
 
 ## How to use?
+### Meeting Scheduling
+Schedule meeting with all the team member easily using the bot. The organizer just have to tell bot about the meeting, the bot will private message to all the meeting member as a reminder before 30 minutes of meeting time.<br>
+`neo discussion on <subject> at <time> <date>`
+### Check Spam
+Bot will detect all the spam users in any stream.<br>
+`neo checkspam`<br>
+### Smart Messages Summarization
+
+### To-Do
+Add, remove, check current status for to-do's<br>
+`neo todo add <name of task>`<br>
+`neo todo done <index of task>`<br>
+`neo todo remove/undone <index of task>`<br>
+`neo todo remove all`<br>
+### Currency Exchange
+Show all the currency value related to particular currency value. <br>
+`neo currency <currency type>`<br>
+`neo currency <type 1> to <type 2>`<br>
+### Geolocation
+Display the longitude and latitude of a given place.<br>
+`neo geolocation <place name>`
+### Top News
+Display top 10 current/trending news.<br>
+`neo news`<br>
+### Translate Languages
+Translate words from one language to english language.<br>
+`neo translate <word>`
+### Weather Queries
+Display all the weather information of any place.<br>
+`neo weather <place>`
+
+## License
+This project is currently licensed under the **Apache License Version 2.0**. See the LICENSE file for more info.
