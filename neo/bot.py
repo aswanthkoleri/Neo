@@ -6,6 +6,7 @@ import json
 import httplib2
 import os
 from topnews import News
+from translate import Translate
 
 BOT_MAIL = "neo-bot@bint.zulipchat.com"
 
@@ -17,7 +18,7 @@ class Neo(object):
     def __init__(self):
         self.client = zulip.Client(site="https://bint.zulipchat.com/api/")
         self.subscribe_all()
-        self.trans = Translate()
+        self.translate = Translate()
         self.news = News()
         self.subKeys=["hello","sample"]
     
@@ -60,6 +61,18 @@ class Neo(object):
 					"to": msg["display_recipient"],
 					"content": message
 					})
+            if content[1].lower() == "translate":
+                message = content[2:]
+                message = " ".join(message)
+                print(message)
+                transMsg = self.translate.translateMsg(message)
+                self.client.send_message({
+					"type": "stream",
+					"subject": msg["subject"],
+					"to": msg["display_recipient"],
+					"content": transMsg
+					})
+
             
 
 def main():
