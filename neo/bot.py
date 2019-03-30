@@ -5,6 +5,7 @@ import re
 import json
 import httplib2
 import os
+from meeting import getAllUsers
 from topnews import News
 from todo import Todo,displayTodo
 from translate import Translate
@@ -203,6 +204,18 @@ class Neo(object):
                 date = content[i] + " " + content[i+1] + " " + content[i+2]
                 print("Time: {}".format(time))
                 print("Date: {}".format(date))
+                privateText = "{} arranged a meeting about {} at {} on {}.".format(sender_email, subject, time, date)
+                message = "Meeting arranged successfully."
+                emails = getAllUsers(sender_email, BOT_MAIL)
+                print(emails)
+                for email in emails:
+                    request = {
+                        "type": "private",
+                        "to": email,
+                        "content": privateText
+                    }
+                    self.client.send_message(request)
+                
             else:
                 message="HELP option"
             self.client.send_message({
