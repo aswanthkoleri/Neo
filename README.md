@@ -9,7 +9,7 @@ A Zulip bot created in HackInTheNorth 4.0 by Team SedLyf
 ## Developers and Maintainers
 The project is developed at **HackInTheNorth 4.0** hackathon and maintained by
 - Aswanth Koleri ([aswanthkoleri](https://github.com/aswanthkoleri))
-- Druvil CR ([druvilcr28](https://github.com/druvilcr28))
+- Druval CR ([druvalcr28](https://github.com/druvalcr28))
 - Divyanshu N Singh([DNS-404](https://github.com/DNS-404))
 - Jogendra Kumar ([jogendra](https://github.com/jogendra))
 
