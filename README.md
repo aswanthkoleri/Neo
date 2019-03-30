@@ -1,5 +1,10 @@
 # NEO BOT
-A Zulip bot created in HackInTheNorth
+
+<img src="https://user-images.githubusercontent.com/20956124/55281725-cba30300-535e-11e9-9fb6-d55e0a03aeb8.png">
+
+A Zulip bot created in HackInTheNorth 4.0 by Team SedLyf
+
+---
 
 ## Developers and Maintainers
 The project is developed at **HackInTheNorth 4.0** hackathon and maintained by
