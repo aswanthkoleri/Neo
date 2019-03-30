@@ -89,6 +89,7 @@ class Neo(object):
                 else:
                     message = "Please ask the query in correct format."
             elif content[1].lower() == "todo":
+                # Has to do some more modifications 
                 if content[2].lower() == "add":
                     todoItem=" ".join(content[3:]).lower()
                     Todo("add",self.todoList,todoItem)
