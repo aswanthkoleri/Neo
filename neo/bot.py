@@ -84,28 +84,30 @@ class Neo(object):
                     message = "Type in following format : neo translate **word**"
             
             elif content[1].lower() == "weather":
-                api_key = fetch_api_key()
-                if len(content) > 2 and content[2].lower() != "":
-                    # Query format: Neo weather London
-                    weather = get_weather(api_key, content[2].lower())
-                    if str(weather['cod']) != "404":
-                        message += "[](http://openweathermap.org/img/w/{}.png)".format(weather['weather'][0]['icon'])
-                        message += "**Weather report for {}**\n".format(content[2].lower())
-                        message += "Temperature: **{}**\n".format(str(weather['main']['temp']) + "° C")
-                        message += "Pressure: **{}**\n".format(str(weather['main']['pressure']) + " hPa")
-                        message += "Humidity: **{}**\n".format(str(weather['main']['humidity']) + "%")
-                        message += "Wind Speed: **{}**".format(str(weather['wind']['speed']) + " $$m/s^2$$")
+                try:
+                    api_key = fetch_api_key()
+                    if len(content) > 2 and content[2].lower() != "":
+                        # Query format: Neo weather London
+                        weather = get_weather(api_key, content[2].lower())
+                        if str(weather['cod']) != "404":
+                            message += "[](http://openweathermap.org/img/w/{}.png)".format(weather['weather'][0]['icon'])
+                            message += "**Weather report for {}**\n".format(content[2].lower())
+                            message += "Temperature: **{}**\n".format(str(weather['main']['temp']) + "° C")
+                            message += "Pressure: **{}**\n".format(str(weather['main']['pressure']) + " hPa")
+                            message += "Humidity: **{}**\n".format(str(weather['main']['humidity']) + "%")
+                            message += "Wind Speed: **{}**".format(str(weather['wind']['speed']) + " $$m/s^2$$")
+                        else:
+                            message = "City not found!\nabc"
                     else:
-                        message = "City not found!\nabc"
-                else:
-                    message = "Please add a location name."
+                        message = "Please add a location name."
+                except:
+                    message = "Something went wrong"
             
             elif content[1].lower() == "geolocation":
                 try:
                     place = content[2]
                     result = self.location.getLocation(place)
-                    message = ""
-                    message += "**Latitude** : "+str(result.lat)+"\n"+"**Longitude** : "+str(result.lng)
+                    message = "**Latitude** : "+str(result.lat)+"\n"+"**Longitude** : "+str(result.lng)
                 except:
                     message = "Type a correct place in following format : neo geolocation **place**"
             
@@ -126,46 +128,49 @@ class Neo(object):
                     message = "Please ask the query in correct format."
             
             elif content[1].lower() == "todo":
-                # Has to do some more modifications 
-                if content[2].lower() == "add":
-                    todoItem=" ".join(content[3:]).lower()
-                    Todo("add",self.todoList,todoItem)
-                    message="** The todo is added **\n The current Todo List is :\n\n"
-                    message=displayTodo(message,self.todoList)
-                elif content[2].lower() =="done":
-                    if content[3].lower().isdigit(): 
-                        itemNo=int(content[3].lower())
-                        # print(itemNo)
-                        message+="** The item is marked as done **\n"
-                        Todo("done",self.todoList,"",itemNo)
+                # Has to do some more modifications
+                try:
+                    if content[2].lower() == "add":
+                        todoItem=" ".join(content[3:]).lower()
+                        Todo("add",self.todoList,todoItem)
+                        message="** The todo is added **\n The current Todo List is :\n\n"
                         message=displayTodo(message,self.todoList)
-                    else:
-                        message="Enter the Todo item number"
-                elif content[2].lower() =="undone":
-                    if content[3].lower().isdigit(): 
-                        itemNo=int(content[3].lower())
-                        # print(itemNo)
-                        message+="** The item is marked as undone **\n"
-                        Todo("undone",self.todoList,"",itemNo)
-                        message=displayTodo(message,self.todoList)
-                    else:
-                        message="Enter the Todo item number"
-                elif content[2].lower() == "remove":
-                    if content[3].lower()!="all":
-                        if content[3].lower().isdigit():
+                    elif content[2].lower() =="done":
+                        if content[3].lower().isdigit(): 
                             itemNo=int(content[3].lower())
-                            Todo("remove",self.todoList,"",itemNo)
-                            message="** The todo item is removed **\nThe current Todo List is :\n\n"
+                            # print(itemNo)
+                            message+="** The item is marked as done **\n"
+                            Todo("done",self.todoList,"",itemNo)
                             message=displayTodo(message,self.todoList)
                         else:
                             message="Enter the Todo item number"
-                    elif content[3].lower() == "all":
-                        Todo("remove_all",self.todoList,"",itemNo)
-                        message="The Todo list is cleared"
+                    elif content[2].lower() =="undone":
+                        if content[3].lower().isdigit(): 
+                            itemNo=int(content[3].lower())
+                            # print(itemNo)
+                            message+="** The item is marked as undone **\n"
+                            Todo("undone",self.todoList,"",itemNo)
+                            message=displayTodo(message,self.todoList)
+                        else:
+                            message="Enter the Todo item number"
+                    elif content[2].lower() == "remove":
+                        if content[3].lower()!="all":
+                            if content[3].lower().isdigit():
+                                itemNo=int(content[3].lower())
+                                Todo("remove",self.todoList,"",itemNo)
+                                message="** The todo item is removed **\nThe current Todo List is :\n\n"
+                                message=displayTodo(message,self.todoList)
+                            else:
+                                message="Enter the Todo item number"
+                        elif content[3].lower() == "all":
+                            Todo("remove_all",self.todoList,"",itemNo)
+                            message="The Todo list is cleared"
+                        else:
+                            message="Invalid todo command"
                     else:
-                        message="Invalid todo command"
-                else:
-                    message="Invalid todo command."
+                        message="Invalid todo command."
+                except:
+                    message = "Something went wrong"
             elif content[1].lower()=="summarize":
                 try:
                     sentenceCount=int(content[2].lower())
