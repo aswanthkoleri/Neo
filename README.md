@@ -10,7 +10,7 @@ A Zulip bot created in HackInTheNorth 4.0 by Team SedLyf
 The project is developed at **HackInTheNorth 4.0** hackathon and maintained by
 - Aswanth Koleri ([aswanthkoleri](https://github.com/aswanthkoleri))
 - Druval CR ([druvalcr28](https://github.com/druvalcr28))
-- Divyanshu N Singh([DNS-404](https://github.com/DNS-404))
+- Divyanshu N Singh ([DNS-404](https://github.com/DNS-404))
 - Jogendra Kumar ([jogendra](https://github.com/jogendra))
 
 # Instructions to run locally:
@@ -18,7 +18,7 @@ The project is developed at **HackInTheNorth 4.0** hackathon and maintained by
 2. Goto to settings and create a new generic bot named 'neo'. (Settings can be found in dropdown of gear icon present in top right corner of zulip realm)
 3. Download the zuliprc file for your bot and place it in your home directory as `.zuliprc`. 
 4. Install all the requirements using ``` pip install -r requirements.txt ```
-5. In ``` bot.py ``` , change site in ``` self.client = zulip.Client(site="https://bint.zulipchat.com/api/") ``` to url of your created zulip realm.Do the same for ``` BOT_MAIL ``` variable.  
+5. In ``` bot.py ``` , change site in ``` self.client = zulip.Client(site="https://bint.zulipchat.com/api/") ``` to url of your created zulip realm. Do the same for ``` BOT_MAIL ``` variable.  
 6. Run ``` bot.py ``` using python 3. ``` python3 bot.py ```
 7. Head over to your created zulip realm and start using the bot.
 
@@ -38,7 +38,7 @@ Neo-Bot can:
 
 ## How to use?
 ### Meeting Scheduling
-Schedule meeting with all the team member easily using the bot. The organizer just have to tell bot about the meeting, the bot will private message to all the meeting member as a reminder before 30 minutes of meeting time.<br>
+Schedule meeting with all the team members easily using the bot. The organizer just have to tell bot about the meeting, the bot will send private message to all the team members informing them about the meeting. Also, the bot will remind everyone about the meeting 30 minutes before the meeting time.<br>
 `neo discussion on <subject> at <time> <date>`
 ### Check Spam
 Bot will detect all the spam users in any stream.<br>
