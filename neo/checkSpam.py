@@ -98,12 +98,10 @@ def analyse(msgs,timings):
     timeRank = rank_time(timings)
     return similarityRank,timeRank
 
-def checkSpam(stream_name,message_id):
+def checkSpam(stream_name,message_id,emails):
     client = zulip.Client(config_file="~/.zuliprc")
     users = client.get_members()
-    emails = []
-    for member in users["members"]:
-        emails.append(member["email"])
+
     results = []
     for email in emails:
         request = {

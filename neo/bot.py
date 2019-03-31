@@ -186,11 +186,27 @@ class Neo(object):
                 message+="\n** The summary of the messages is : **\n"+summary
             elif content[1].lower() == "checkspam":
                 message = ""
-                results = checkSpam("announce",message_id)
-                for item in results:
-                    if((item.similarityRank > 5) and (item.timeRank > 3)):
-                        message += "**"+item.email+"** : Suspected\n"
-                        print(message)
+                users = client.get_members()
+                emails = []
+                flag_admin=1
+                for member in users["members"]:
+                    if(member["email"]==sender_email):
+                        if(not member["is_admin"]):
+                            flag_admin=0
+                            break
+                    emails.append(member["email"])
+                if(flag_admin):  
+                    results = checkSpam("announce",message_id,emails)
+                    flag=1
+                    for item in results:
+                        if((item.similarityRank > 5) and (item.timeRank > 3)):
+                            message += "**"+item.email+"** : Suspected\n"
+                            flag=0
+                            print(message)
+                    if(flag):
+                        message = "There is no suspected users"
+                else:
+                    message = "Function access denied"
             elif content[1].lower() == "discussion":
                 # Reminder bot format : neo discussion on <subject> at <time> <Date>
                 print(content)
