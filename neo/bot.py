@@ -163,7 +163,7 @@ class Neo(object):
                             else:
                                 message="Enter the Todo item number"
                         elif content[3].lower() == "all":
-                            Todo("remove_all",self.todoList,"",itemNo)
+                            Todo("remove_all",self.todoList,"",-1)
                             message="The Todo list is cleared"
                         else:
                             message="Invalid todo command"
@@ -277,7 +277,21 @@ class Neo(object):
                     timer = threading.Timer(diff, abc)
                     timer.start()
             else:
-                message="HELP option"
+                message="HELP options : \n"
+                message += "**1**. neo news\n"
+                message += "**2**. neo discussion on **<subject>** at **<time> <date>**\n"
+                message += "**3**. neo checkspam\n"
+                message += "**4**. neo summarize **<sentence count> <summarization type> <sentences>**\n"
+                message += "**5**. neo digest\n"
+                message += "**6**. neo todo add **<name of task>**\n"
+                message += "** --** neo todo done **<index of task>**\n"
+                message += "** --** neo todo remove/undone **<index of task>**\n"
+                message += "** --** neo todo remove all\n"
+                message += "**7**. neo currency **<currency type>**\n"
+                message += "** --** neo currency **<type 1>** to **<type 2>**\n"
+                message += "**8**. neo geolocation **<place name>**\n"
+                message += "**9**. neo translate **<word>**\n"
+                message += "**10**. neo weather **<place>**\n"
             self.client.send_message({
                 "type": "stream",
                 "subject": msg["subject"],
