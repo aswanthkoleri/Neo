@@ -190,10 +190,11 @@ class Neo(object):
                     i+=1
                 print(i)
                 # time (Assumed to be UTC)
-                i=+1
-                print(content[i].lower())
+                j=i+1
+                print(j)
+                print(content[j].lower())
                 time=content[i]
-                print("time",time )
+                print("time",time)
                 i+=1
                 date=content[i]
                 print(subject,time,date)
