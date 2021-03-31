@@ -8,7 +8,7 @@ docopt==0.6.2
 googletrans==2.4.0
 httplib2==0.12.1
 idna==2.8
-lxml==4.3.3
+lxml==4.6.3
 matrix-client==0.3.2
 nltk==3.4
 numpy==1.16.2
