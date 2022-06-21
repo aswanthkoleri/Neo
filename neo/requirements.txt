@@ -11,7 +11,7 @@ idna==2.8
 lxml==4.3.3
 matrix-client==0.3.2
 nltk==3.4
-numpy==1.16.2
+numpy==1.22.0
 pkg-resources==0.0.0
 pycparser==2.19
 pyOpenSSL==19.0.0
